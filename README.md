@@ -116,7 +116,7 @@ Launch podcasts, explainer videos, and premium ad-lite tiers.
 
 Build Bharat Herald as a regional-first digital powerhouse.
 
-📊 Deliverables
+## 📊 Deliverables
 
 SQL Queries: For each business/ad-hoc request.
 
@@ -124,26 +124,13 @@ Excel Dashboards: Circulation trends, ad revenue, print waste leaderboard, digit
 
 Presentation Slides: Storytelling from diagnosis → insights → roadmap.
 
-🙌 Acknowledgements
-
-Thanks to Codebasics, Dhaval Patel, and Hemanand Vadivel for this challenge.
-
-This project helped me sharpen skills in:
-
-SQL problem-solving
-
-Excel-based data storytelling
-
-Turning insights into business strategy
-
-💡 Key Takeaway
+## 💡 Key Takeaway
 
 This project was not just about writing SQL queries or building charts. It was about connecting data with business strategy and answering:
 
 “How can data guide the survival of a legacy brand in a disrupted industry?”
 
-🔗 Connect
+## 🔗 Connect
 
 💬 Always open to feedback and discussions on data analytics, storytelling, and digital transformation.
-Find me here on GitHub or LinkedIn
-.
+Find me here on GitHub or LinkedIn [LinkedIn](https://www.linkedin.com/in/lvaraprasad/).
