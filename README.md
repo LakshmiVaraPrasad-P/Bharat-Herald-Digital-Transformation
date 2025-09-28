@@ -1,6 +1,6 @@
 # Bharat-Herald-Digital-Transformation
 
-📌 Project Overview
+## 📌 Project Overview
 
 Bharat Herald, a 70-year-old legacy newspaper, is facing a survival crisis in the post-COVID digital era. Once printing 1.2M+ daily copies, circulation dropped to under 560K by 2024.
 
@@ -8,7 +8,7 @@ Competitors adapted quickly with mobile-first apps, WhatsApp delivery, and subsc
 
 This project simulates a data analyst’s role in diagnosing the crisis and building a roadmap for digital transformation using SQL + Excel.
 
-🎯 Problem Statement
+## 🎯 Problem Statement
 
 Diagnose what went wrong in circulation and ad revenue.
 
@@ -20,7 +20,7 @@ Highlight missed opportunities in the failed digital pilot.
 
 Recommend a phased roadmap for digital relaunch.
 
-🛠️ Tech Stack
+## 🛠️ Tech Stack
 
 SQL → Writing queries for ad-hoc analysis, joins, CTEs, ranking, and time-based comparisons.
 
@@ -28,7 +28,7 @@ Excel → Cleaning datasets, creating pivot tables, and building charts for stak
 
 Data Storytelling → Turning findings into clear insights and business recommendations.
 
-📂 Dataset
+## 📂 Dataset
 
 The dataset (2019–2024) includes:
 
@@ -42,8 +42,9 @@ fact_digital_pilot → Engagement metrics for digital pilot (downloads, sessions
 
 dim_city → City details.
 
-🔍 Key Business Questions & Insights
-1️⃣ Circulation Decline
+## 🔍 Key Business Questions & Insights
+
+### 1️⃣ Circulation Decline
 
 Sharpest drops: Jan 2021 (Varanasi), Nov 2019 (Varanasi), Jan 2020 (Jaipur), Oct 2020 (Varanasi).
 
@@ -51,7 +52,7 @@ Pattern → Declines often cluster in January → a structural weak month.
 
 👉 Insight: Declines weren’t only gradual but also triggered by *sudden shocks (COVID, distribution breakdowns, seasonal slowdowns).
 
-2️⃣ Ad Revenue Concentration
+### 2️⃣ Ad Revenue Concentration
 
 No category >50%, but 2 categories >30% consistently.
 
@@ -59,7 +60,7 @@ Risk: Over-dependence on a few sectors.
 
 👉 Insight: Diversification into FMCG, Education, and Health ads is critical.
 
-3️⃣ Print Efficiency & Waste
+### 3️⃣ Print Efficiency & Waste
 
 Some cities circulated less than 60% of printed copies.
 
@@ -67,7 +68,7 @@ Same 3 cities appeared in Top 5 waste contributors every year.
 
 👉 Insight: Waste is structural, not random → biggest efficiency gains possible here.
 
-4️⃣ Digital Readiness vs Pilot Engagement
+### 4️⃣ Digital Readiness vs Pilot Engagement
 
 Kanpur: Highest readiness score but among the lowest engagement.
 
@@ -75,7 +76,7 @@ Market was ready → product failed.
 
 👉 Insight: Kanpur is a must-win city for Phase 1 relaunch.
 
-5️⃣ Consistent Declining Cities
+### 5️⃣ Consistent Declining Cities
 
 No city declined in both metrics every single year.
 
@@ -83,8 +84,15 @@ One city declined 3 years in a row → still a risk market.
 
 👉 Insight: Declines are widespread but uneven → showing volatility, not a smooth downward trend.
 
-🚀 Phased Roadmap (Recommendations)
-Phase 1: Stabilize & Target (0–6 months)
+### 5️⃣ Readiness vs Pilot Engagement Outlier
+
+Kanpur - A ready market where our digital pilot failed to engage
+
+Phase - 1 digital relaunch cities : Kanpur, Lucknow, Varanasi, Bhopal, Ahmedabad
+
+
+## 🚀 Phased Roadmap (Recommendations)
+### Phase 1: Stabilize & Target 
 
 Cut print waste in 3 recurring loss cities.
 
@@ -92,7 +100,7 @@ Relaunch digital in 3 priority cities (high readiness + high engagement + sharp 
 
 Launch mobile-first e-paper, distribute daily headlines on WhatsApp.
 
-Phase 2: Expand & Engage (6–18 months)
+### Phase 2: Expand & Engage 
 
 Subscription bundles (weekday digital + weekend premium).
 
@@ -100,7 +108,7 @@ Regional language apps.
 
 Diversify ad revenue streams.
 
-Phase 3: Scale & Innovate (18–36 months)
+### Phase 3: Scale & Innovate 
 
 Digital-first strategy in declining print cities.
 
