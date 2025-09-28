@@ -1,0 +1,190 @@
+### Business Request – 1: Monthly Circulation Drop Check
+#   -Generate a report showing the top 3 months (2019–2024) 
+#   -where any city recorded the sharpest month-over-month decline in net_circulation.
+
+with cte as 
+(SELECT 
+    city_id,
+    year,
+    month_no,
+    month_new,
+    net_circulation,
+    net_circulation - LAG(net_circulation) OVER( PARTITION BY city_id ORDER BY year, month_no ) AS mom_chg
+FROM
+    fact_print_sales_new)
+
+select * from cte
+where mom_chg < 0
+order by mom_chg 
+limit 4;
+
+#--------------------------------------------------------------------------------
+
+# Business Request – 2: Yearly Revenue Concentration by Category
+#  - Identify ad_categories that contributed > 50% of total yearly ad_revenue.
+
+-- Step 1: Aggregate per year & category
+
+with cte as(
+select 
+	year,
+    ad_category,
+    sum(ad_revenue_inr) as category_revenue,
+    sum(sum(ad_revenue_inr)) over(partition by year) as total_yearly_rev
+from fact_ad_revenue
+group by year, ad_category)
+
+-- Step 2: Add contribution_pct and Filter categories contributing > 50%
+
+select
+	*,
+    round( (category_revenue / total_yearly_rev )*100,2) as contribution_pct
+from
+	cte
+Having contribution_pct > 30
+Order by contribution_pct desc;
+
+#--------------------------------------------------------------------------
+# Business Request – 3
+# 2024 Print Efficiency Leaderboard
+#  -For 2024, rank cities by print efficiency = net_circulation / copies_printed.
+#   -- Return top 5.
+
+with cte as (
+select 
+    c.city,
+    copies_printed,
+    net_circulation,
+	ROUND((net_circulation / copies_printed)*100,2) as print_efficiency
+from 
+	fact_print_sales_new f
+join
+	dim_city c
+    ON 
+		c.city_id = f.city_id
+where year = 2024
+group by city)
+
+SELECT 
+    *,
+    dense_rank() over(order by print_efficiency desc) as rnk
+FROM
+    cte
+LIMIT 5;
+
+#-------------------------------------------------
+# Business Request – 4 : Internet Readiness Growth (2021)
+# -For each city, compute the change in internet penetration from Q1-2021 to Q4-2021 
+  -- and identify the city with the highest improvement
+with city_2021_q1 as(
+select
+	city_id,
+    internet_penetration
+from
+	fact_city_readiness
+where year = 2021 and qtr = "Q1"),
+
+city_2021_q4 as(
+select
+	city_id,
+    internet_penetration
+from
+	fact_city_readiness
+where year = 2021 and qtr = "Q4")
+
+select
+	q1.city_id,
+    c.city,
+    round((q4.internet_penetration - q1.internet_penetration),2) as delta_internet_rate
+from 
+	city_2021_q1 as q1
+JOIN 
+	city_2021_q4 as q4
+	ON q1.city_id = q4.city_id
+join
+	dim_city c
+    ON c.city_id = q1.city_id
+ORDER BY delta_internet_rate DESC
+LIMIT 1;
+
+#-------------------------------------------------
+# Business Request – 5: Consistent Multi-Year Decline (2019→2024)
+# -Find cities where both net_circulation and ad_revenue decreased every year 
+  -- from 2019 through 2024 (strictly decreasing sequences).
+	
+WITH cte AS (
+    SELECT 
+        fp.city_id,
+        fp.year,
+        net_circulation AS yearly_net_circulation,
+        ad_revenue_inr AS yearly_ad_revenue_inr,
+        CASE
+            WHEN net_circulation - LAG(net_circulation) OVER (PARTITION BY city_id ORDER BY year) < 0 THEN 'Yes'
+            WHEN LAG(net_circulation) OVER (PARTITION BY city_id ORDER BY year) IS NULL THEN NULL
+            ELSE 'No'
+        END AS is_declining_print,
+        CASE
+            WHEN ad_revenue_inr - LAG(ad_revenue_inr) OVER (PARTITION BY city_id ORDER BY year) < 0 THEN 'Yes'
+            WHEN LAG(ad_revenue_inr) OVER (PARTITION BY city_id ORDER BY year) IS NULL THEN NULL
+            ELSE 'No'
+        END AS is_declining_ad_rev_inr
+    FROM 
+        fact_print_sales_new AS fp
+    JOIN
+        fact_ad_revenue AS fa
+    USING (edition_id, year)
+    GROUP BY city_id, year
+    ORDER BY city_id, year
+)
+SELECT 
+    *,
+    CASE
+        WHEN is_declining_print = 'Yes' AND is_declining_ad_rev_inr = 'Yes' THEN 'Yes'
+        WHEN is_declining_print IS NULL AND is_declining_ad_rev_inr IS NULL THEN NULL
+        ELSE 'No'
+    END AS is_declining_both
+FROM
+    cte
+ Where 
+	is_declining_print IS NOT NULL
+    AND is_declining_ad_rev_inr IS NOT NULL
+ Having is_declining_both = 'Yes';               
+	
+
+
+#----------------------------------------------------------
+## Business Request – 6 : 2021 Readiness vs Pilot Engagement Outlier
+#  -In 2021, identify the city with the highest digital readiness score but among the bottom 3 in digital pilot engagement.
+  -- readiness_score = AVG(smartphone_rate, internet_rate, literacy_rate)
+ -- “Bottom 3 engagement” uses the chosen engagement metric provided (e.g., engagement_rate, active_users, or sessions).
+
+WITH cte AS (
+    SELECT 
+        city_id,
+        ROUND((literacy_rate + smartphone_penetration + internet_penetration)/3, 2) AS readiness_score_2021,
+        SUM(downloads_or_accesses) AS engagement_metric_2021
+    FROM
+        fact_city_readiness
+    JOIN 
+        fact_digital_pilot USING(city_id)
+    WHERE year = 2021
+    GROUP BY city_id
+),
+ranked AS (
+    SELECT 
+        *,
+        RANK() OVER (ORDER BY readiness_score_2021 DESC) AS readiness_rank_desc,
+        RANK() OVER (ORDER BY engagement_metric_2021 ASC) AS engagement_rank_asc
+    FROM cte
+)
+SELECT
+    city_id,
+    readiness_score_2021,
+    engagement_metric_2021,
+    readiness_rank_desc,
+    engagement_rank_asc,
+    CASE 
+        WHEN readiness_rank_desc = 1 AND engagement_rank_asc <= 3 THEN 'Yes'
+        ELSE 'No'
+    END AS is_outlier
+FROM ranked;
