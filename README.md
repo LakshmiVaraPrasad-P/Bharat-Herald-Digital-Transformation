@@ -8,7 +8,7 @@ Competitors adapted quickly with mobile-first apps, WhatsApp delivery, and subsc
 
 This project simulates a data analyst’s role in diagnosing the crisis and building a roadmap for digital transformation using SQL + Excel.
 
-[vedio Presentation](https://www.youtube.com/watch?v=9cs_U9HUzEY).
+[Vedio Presentation](https://www.youtube.com/watch?v=9cs_U9HUzEY).
 
 ## 🎯 Problem Statement
 
